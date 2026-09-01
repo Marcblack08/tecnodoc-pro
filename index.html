@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TecnoDoc Pro 2.0 - IA Integrada</title>
-    
+    <title>TecnoDoc Pro 2.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -14,14 +13,12 @@
         tailwind.config = {
             darkMode: 'class',
             theme: {
-                extend: {
-                    colors: { brand: { 400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7' } }
-                }
+                extend: { colors: { brand: { 400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7' } } }
             }
         }
     </script>
     <style>
-        body { background-color: #020617; color: #e2e8f0; }
+        body { background-color: #020617; color: #e2e8f0; font-family: sans-serif; }
         .glass-card { background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 0.75rem; }
         .input-tech { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(56, 189, 248, 0.2); color: white; padding: 0.5rem; border-radius: 0.375rem; width: 100%; }
         .btn-tech { background: linear-gradient(90deg, #0ea5e9, #0284c7); color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500; cursor: pointer; }
@@ -29,13 +26,63 @@
 </head>
 <body class="p-4">
 
-    <div class="max-w-4xl mx-auto glass-card p-6 space-y-6">
-        <h2 class="text-xl font-bold text-brand-400 flex items-center gap-2">
-            <i class="fa-solid fa-wand-magic-sparkles"></i> Formulario de Proforma con Asistente IA
-        </h2>
+    <!-- 1. PANTALLA DE INICIO DE SESIÓN -->
+    <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
+        <div class="glass-card w-full max-w-md p-8">
+            <div class="text-center mb-6">
+                <i class="fa-solid fa-microchip text-4xl text-brand-400 mb-3"></i>
+                <h1 class="text-3xl font-bold text-white">TECNODOC <span class="text-brand-400">PRO 2.0</span></h1>
+                <p class="text-slate-400 mt-2 text-sm">Cotizaciones & Servicios Técnicos</p>
+            </div>
+            
+            <div class="flex border-b border-slate-700/60 mb-6 text-sm">
+                <button id="tab-login" onclick="switchAuthTab('login')" class="w-1/2 py-2 text-center text-brand-400 border-b-2 border-brand-400 font-semibold">Iniciar Sesión</button>
+                <button id="tab-register" onclick="switchAuthTab('register')" class="w-1/2 py-2 text-center text-slate-400 font-semibold">Registrarse</button>
+            </div>
 
+            <!-- Login -->
+            <form id="form-login" onsubmit="handleAuth(event, 'login')" class="space-y-4">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Correo Electrónico</label>
+                    <input type="email" id="auth-email" class="input-tech text-sm" required placeholder="correo@ejemplo.com">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Contraseña</label>
+                    <input type="password" id="auth-pwd" class="input-tech text-sm" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-tech w-full py-2.5 text-sm mt-4">Ingresar <i class="fa-solid fa-arrow-right ml-2"></i></button>
+            </form>
+
+            <!-- Registro -->
+            <form id="form-register" onsubmit="handleAuth(event, 'register')" class="space-y-3 hidden">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Correo Electrónico</label>
+                    <input type="email" id="reg-email" class="input-tech text-sm" required placeholder="correo@ejemplo.com">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Contraseña</label>
+                    <input type="password" id="reg-pwd" class="input-tech text-sm" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-tech w-full py-2.5 text-sm mt-4">Crear Cuenta <i class="fa-solid fa-user-plus ml-2"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. SISTEMA PRINCIPAL CON IA (SE MUESTRA TRAS INICIAR SESIÓN) -->
+    <div id="app-container" class="hidden max-w-4xl mx-auto glass-card p-6 space-y-6">
+        <div class="flex justify-between items-center border-b border-slate-700 pb-4">
+            <h2 class="text-xl font-bold text-brand-400 flex items-center gap-2">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> TecnoDoc Pro - Generador IA
+            </h2>
+            <div class="flex items-center gap-3">
+                <span id="user-display-name" class="text-xs text-slate-300"></span>
+                <button onclick="logout()" class="text-xs text-red-400 hover:text-red-300 font-semibold"><i class="fa-solid fa-power-off"></i> Salir</button>
+            </div>
+        </div>
+
+        <!-- MÓDULO IA PARA FOTOS Y AUDIOS -->
         <div class="bg-slate-900/80 p-4 rounded-lg border border-purple-500/30 space-y-4">
-            <p class="text-xs font-semibold text-purple-400 uppercase tracking-wider"><i class="fa-solid fa-robot mr-1"></i> Asistente de Carga Rápida Gemini IA</p>
+            <p class="text-xs font-semibold text-purple-400 uppercase tracking-wider"><i class="fa-solid fa-robot mr-1"></i> Asistente Gemini IA</p>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="p-3 bg-slate-800/50 rounded border border-slate-700">
@@ -53,6 +100,7 @@
             <p id="ai-status" class="text-xs text-amber-400 font-mono hidden"></p>
         </div>
 
+        <!-- TABLA DE DETALLES DE PROFORMA -->
         <div class="space-y-3">
             <div class="grid grid-cols-12 gap-2">
                 <input type="text" id="item-desc" placeholder="Descripción" class="input-tech text-xs col-span-6">
@@ -79,9 +127,57 @@
         </div>
     </div>
 
+    <!-- SCRIPT DE AUTENTICACIÓN Y SERVICIOS -->
     <script>
+        const SUPABASE_URL = 'https://nozaqrgryxvdomtiwgsd.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_zeR7uHTUPHFThzWlb3CtFg_LGpGkT-Z';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         let items = [];
 
+        function switchAuthTab(tab) {
+            if (tab === 'login') {
+                document.getElementById('form-login').classList.remove('hidden');
+                document.getElementById('form-register').classList.add('hidden');
+                document.getElementById('tab-login').className = 'w-1/2 py-2 text-center text-brand-400 border-b-2 border-brand-400 font-semibold';
+                document.getElementById('tab-register').className = 'w-1/2 py-2 text-center text-slate-400 font-semibold';
+            } else {
+                document.getElementById('form-login').classList.add('hidden');
+                document.getElementById('form-register').classList.remove('hidden');
+                document.getElementById('tab-register').className = 'w-1/2 py-2 text-center text-brand-400 border-b-2 border-brand-400 font-semibold';
+                document.getElementById('tab-login').className = 'w-1/2 py-2 text-center text-slate-400 font-semibold';
+            }
+        }
+
+        async function handleAuth(e, type) {
+            e.preventDefault();
+            if (type === 'login') {
+                const email = document.getElementById('auth-email').value;
+                const password = document.getElementById('auth-pwd').value;
+                const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                if (error) alert('Error al ingresar: ' + error.message);
+                else initSession(data.user);
+            } else {
+                const email = document.getElementById('reg-email').value;
+                const password = document.getElementById('reg-pwd').value;
+                const { data, error } = await supabaseClient.auth.signUp({ email, password });
+                if (error) alert('Error al registrar: ' + error.message);
+                else { alert('¡Cuenta creada con éxito! Ya puedes iniciar sesión.'); switchAuthTab('login'); }
+            }
+        }
+
+        function initSession(user) {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('app-container').classList.remove('hidden');
+            document.getElementById('user-display-name').innerText = user.email;
+        }
+
+        function logout() {
+            supabaseClient.auth.signOut();
+            window.location.reload();
+        }
+
+        // LÓGICA DE PROFORMA Y IA
         function addItem(descVal, qtyVal, priceVal) {
             const desc = descVal || document.getElementById('item-desc').value;
             const qty = qtyVal || parseInt(document.getElementById('item-qty').value) || 1;
@@ -119,7 +215,6 @@
             document.getElementById('total-val').innerText = `S/ ${total.toFixed(2)}`;
         }
 
-        // LLAMADA AL BACKEND OCULTO EN LUGAR DE A LA API DE GEMINI DIRECTA
         async function processPhotoIA() {
             const fileInput = document.getElementById('ai-photo-input');
             if(!fileInput.files[0]) { alert('Selecciona una imagen primero.'); return; }
@@ -127,18 +222,13 @@
             showStatus('Analizando imagen con IA...');
             const file = fileInput.files[0];
             const base64 = await toBase64(file);
-
-            const prompt = "Analiza esta imagen de productos/equipos técnicos. Extrae los ítems en formato JSON estricto con esta estructura: [{\"desc\": \"nombre del producto\", \"qty\": 1, \"price\": 0.00}]. Si no hay precio explícito, pon 0.00.";
+            const prompt = "Analiza esta imagen de productos/equipos técnicos. Extrae los ítems en formato JSON estricto: [{\"desc\": \"nombre\", \"qty\": 1, \"price\": 0.00}].";
 
             try {
                 const response = await fetch('/api/analizar', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        base64Data: base64.split(',')[1],
-                        mimeType: file.type,
-                        prompt: prompt
-                    })
+                    body: JSON.stringify({ base64Data: base64.split(',')[1], mimeType: file.type, prompt })
                 });
 
                 const data = await response.json();
@@ -154,21 +244,16 @@
             const fileInput = document.getElementById('ai-audio-input');
             if(!fileInput.files[0]) { alert('Selecciona un archivo de audio primero.'); return; }
 
-            showStatus('Transcribiendo audio y extrayendo ítems...');
+            showStatus('Transcribiendo audio e insertando ítems...');
             const file = fileInput.files[0];
             const base64 = await toBase64(file);
-
-            const prompt = "Escucha este audio técnico. Extrae todos los productos, cantidades y precios mencionados en este formato JSON estricto: [{\"desc\": \"nombre\", \"qty\": 1, \"price\": 0.00}].";
+            const prompt = "Escucha este audio técnico. Extrae los productos, cantidades y precios en formato JSON estricto: [{\"desc\": \"nombre\", \"qty\": 1, \"price\": 0.00}].";
 
             try {
                 const response = await fetch('/api/analizar', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        base64Data: base64.split(',')[1],
-                        mimeType: file.type,
-                        prompt: prompt
-                    })
+                    body: JSON.stringify({ base64Data: base64.split(',')[1], mimeType: file.type, prompt })
                 });
 
                 const data = await response.json();
@@ -184,12 +269,8 @@
             try {
                 const cleanJson = jsonString.replace(/```json/g, '').replace(/```/g, '').trim();
                 const parsed = JSON.parse(cleanJson);
-                parsed.forEach(item => {
-                    addItem(item.desc, item.qty, item.price);
-                });
-            } catch (e) {
-                console.log('Error parsing JSON', jsonString);
-            }
+                parsed.forEach(item => addItem(item.desc, item.qty, item.price));
+            } catch (e) { console.log('Error parsing JSON', jsonString); }
         }
 
         function showStatus(msg) {
