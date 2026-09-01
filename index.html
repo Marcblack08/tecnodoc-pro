@@ -7,14 +7,14 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- jsPDF para Generación de PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script>
         tailwind.config = {
@@ -23,8 +23,7 @@
                 extend: {
                     fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
-                        brand: { 400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7', 900: '#0c4a6e' },
-                        dark: { 800: '#1e293b', 900: '#0f172a', 950: '#020617' }
+                        brand: { 400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7', 900: '#0c4a6e' }
                     }
                 }
             }
@@ -33,15 +32,12 @@
 
     <style>
         body { background-color: #020617; background-image: radial-gradient(circle at top right, #0c4a6e 0%, transparent 40%), radial-gradient(circle at bottom left, #0c4a6e 0%, transparent 40%); background-attachment: fixed; }
-        .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .glass-card { background: linear-gradient(145deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%); backdrop-filter: blur(10px); border: 1px solid rgba(56, 189, 248, 0.1); border-radius: 1rem; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1); transition: transform 0.2s, box-shadow 0.2s; }
-        .glass-card:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(14, 165, 233, 0.15); border-color: rgba(56, 189, 248, 0.3); }
-        .input-tech { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(56, 189, 248, 0.2); color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; width: 100%; transition: all 0.3s; }
+        .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .glass-card { background: linear-gradient(145deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%); backdrop-filter: blur(10px); border: 1px solid rgba(56, 189, 248, 0.1); border-radius: 1rem; }
+        .input-tech { background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(56, 189, 248, 0.2); color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; width: 100%; }
         .input-tech:focus { outline: none; border-color: #38bdf8; box-shadow: 0 0 10px rgba(56,189,248,0.2); }
-        .btn-tech { background: linear-gradient(90deg, #0ea5e9, #0284c7); color: white; padding: 0.5rem 1.5rem; border-radius: 0.5rem; font-weight: 500; transition: all 0.3s; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
-        .btn-tech:hover { box-shadow: 0 0 15px rgba(14, 165, 233, 0.4); transform: scale(1.02); }
-        .btn-tech-outline { background: transparent; border: 1px solid #0ea5e9; color: #38bdf8; padding: 0.5rem 1.5rem; border-radius: 0.5rem; font-weight: 500; transition: all 0.3s; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; }
-        .btn-tech-outline:hover { background: rgba(14, 165, 233, 0.1); box-shadow: 0 0 15px rgba(14, 165, 233, 0.2); }
+        .btn-tech { background: linear-gradient(90deg, #0ea5e9, #0284c7); color: white; padding: 0.5rem 1.5rem; border-radius: 0.5rem; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .btn-tech-outline { background: transparent; border: 1px solid #0ea5e9; color: #38bdf8; padding: 0.5rem 1.5rem; border-radius: 0.5rem; cursor: pointer; }
         .nav-item.active { background: rgba(14, 165, 233, 0.15); border-right: 3px solid #38bdf8; color: #38bdf8; }
     </style>
 </head>
@@ -50,19 +46,18 @@
     <!-- AUTENTICACIÓN -->
     <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center p-4 glass">
         <div class="glass-card w-full max-w-md p-8 relative overflow-hidden">
-            <div class="text-center mb-6 relative z-10">
+            <div class="text-center mb-6">
                 <i class="fa-solid fa-microchip text-4xl text-brand-400 mb-3"></i>
-                <h1 class="text-3xl font-bold text-white tracking-tight">TECNODOC <span class="text-brand-400">PRO 2.0</span></h1>
-                <p class="text-slate-400 mt-2 text-sm">Cotiza. Documenta. Analiza. Crece.</p>
+                <h1 class="text-3xl font-bold text-white">TECNODOC <span class="text-brand-400">PRO 2.0</span></h1>
+                <p class="text-slate-400 mt-2 text-sm">Cotizaciones & Servicios Técnicos</p>
             </div>
             
-            <div class="flex border-b border-slate-700/60 mb-6 text-sm font-medium">
-                <button id="tab-login" onclick="switchAuthTab('login')" class="w-1/2 py-2 text-center text-brand-400 border-b-2 border-brand-400">Iniciar Sesión</button>
-                <button id="tab-register" onclick="switchAuthTab('register')" class="w-1/2 py-2 text-center text-slate-400 hover:text-white">Registrarse</button>
+            <div class="flex border-b border-slate-700/60 mb-6 text-sm">
+                <button id="tab-login" onclick="switchAuthTab('login')" class="w-1/2 py-2 text-center text-brand-400 border-b-2 border-brand-400 font-semibold">Iniciar Sesión</button>
+                <button id="tab-register" onclick="switchAuthTab('register')" class="w-1/2 py-2 text-center text-slate-400 font-semibold">Registrarse</button>
             </div>
 
-            <!-- Iniciar Sesión -->
-            <form id="form-login" onsubmit="handleAuth(event, 'login')" class="space-y-4 relative z-10">
+            <form id="form-login" onsubmit="handleAuth(event, 'login')" class="space-y-4">
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">Correo Electrónico</label>
                     <input type="email" id="auth-email" class="input-tech text-sm" required placeholder="correo@ejemplo.com">
@@ -74,16 +69,7 @@
                 <button type="submit" class="btn-tech w-full py-2.5 text-sm mt-4">Ingresar <i class="fa-solid fa-arrow-right ml-2"></i></button>
             </form>
 
-            <!-- Registro -->
-            <form id="form-register" onsubmit="handleAuth(event, 'register')" class="space-y-3 relative z-10 hidden">
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Nombre Completo</label>
-                    <input type="text" id="reg-name" class="input-tech text-sm" required placeholder="Nombre">
-                </div>
-                <div>
-                    <label class="block text-xs text-slate-400 mb-1">Nombre de la Empresa</label>
-                    <input type="text" id="reg-company" class="input-tech text-sm" required placeholder="Tu Empresa / Taller">
-                </div>
+            <form id="form-register" onsubmit="handleAuth(event, 'register')" class="space-y-3 hidden">
                 <div>
                     <label class="block text-xs text-slate-400 mb-1">Correo Electrónico</label>
                     <input type="email" id="reg-email" class="input-tech text-sm" required placeholder="correo@ejemplo.com">
@@ -97,86 +83,140 @@
         </div>
     </div>
 
-    <!-- APLICACIÓN PRINCIPAL COMPLETA -->
+    <!-- APLICACIÓN PRINCIPAL -->
     <div id="app-container" class="hidden flex h-screen w-full overflow-hidden">
         
         <!-- SIDEBAR -->
-        <aside class="w-64 glass border-r border-slate-700/50 flex flex-col h-full flex-shrink-0 transition-all duration-300 md:relative absolute z-40" id="sidebar">
-            <div class="p-6 flex items-center justify-between border-b border-slate-700/50">
-                <div class="flex items-center gap-3">
-                    <i class="fa-solid fa-microchip text-2xl text-brand-400"></i>
-                    <h2 class="font-bold text-xl tracking-tight text-white">TecnoDoc<span class="text-brand-400">Pro</span></h2>
-                </div>
+        <aside class="w-64 glass border-r border-slate-700/50 flex flex-col h-full flex-shrink-0">
+            <div class="p-6 flex items-center gap-3 border-b border-slate-700/50">
+                <i class="fa-solid fa-microchip text-2xl text-brand-400"></i>
+                <h2 class="font-bold text-xl text-white">TecnoDoc<span class="text-brand-400">Pro</span></h2>
             </div>
             
             <div class="p-4 flex-1 overflow-y-auto space-y-1">
-                <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 mt-2 px-3">Principal</p>
-                <button onclick="nav('dashboard', this)" class="nav-item active w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/50 transition">
+                <p class="text-xs font-semibold text-slate-500 uppercase mb-2 px-3">Menú Principal</p>
+                <button onclick="nav('dashboard', this)" class="nav-item active w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/50">
                     <i class="fa-solid fa-house w-5 text-center"></i> Dashboard
                 </button>
-                <button onclick="nav('clientes', this)" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/50 transition">
+                <button onclick="nav('proformas', this)" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/50">
+                    <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i> Nueva Proforma
+                </button>
+                <button onclick="nav('clientes', this)" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/50">
                     <i class="fa-solid fa-users w-5 text-center"></i> Clientes
                 </button>
-                <button onclick="nav('productos', this)" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/50 transition">
+                <button onclick="nav('productos', this)" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/50">
                     <i class="fa-solid fa-boxes-stacked w-5 text-center"></i> Base de Productos
                 </button>
             </div>
 
             <div class="p-4 border-t border-slate-700/50">
-                <button onclick="logout()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-400 hover:bg-red-500/10 transition">
+                <button onclick="logout()" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-400 hover:bg-red-500/10">
                     <i class="fa-solid fa-arrow-right-from-bracket w-5 text-center"></i> Cerrar Sesión
                 </button>
             </div>
         </aside>
 
         <!-- MAIN AREA -->
-        <main class="flex-1 flex flex-col h-full relative z-10 overflow-hidden">
+        <main class="flex-1 flex flex-col h-full relative overflow-hidden">
             <!-- TOPBAR -->
-            <header class="h-16 glass border-b border-slate-700/50 flex items-center justify-between px-6 flex-shrink-0">
+            <header class="h-16 glass border-b border-slate-700/50 flex items-center justify-between px-6">
                 <h2 id="view-title" class="text-xl font-semibold text-white">Dashboard</h2>
                 <div class="flex items-center gap-3">
                     <div id="user-avatar" class="w-8 h-8 rounded-full bg-brand-500 flex items-center justify-center text-white font-bold text-sm">U</div>
-                    <div>
-                        <p id="user-display-name" class="text-sm font-medium text-white leading-tight">Usuario</p>
-                    </div>
+                    <p id="user-display-name" class="text-sm font-medium text-white">Usuario</p>
                 </div>
             </header>
 
             <!-- VISTAS -->
-            <div class="flex-1 overflow-y-auto p-6 relative">
+            <div class="flex-1 overflow-y-auto p-6">
                 
                 <!-- 1. DASHBOARD -->
                 <div id="view-dashboard" class="view-section space-y-6">
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div class="glass-card p-4">
+                            <p class="text-xs text-slate-400">Proformas Emitidas</p>
+                            <h3 class="text-2xl font-bold text-brand-400 mt-1" id="dash-prof-count">0</h3>
+                        </div>
+                        <div class="glass-card p-4">
                             <p class="text-xs text-slate-400">Total Clientes</p>
                             <h3 class="text-2xl font-bold text-white mt-1" id="dash-cli-count">0</h3>
                         </div>
                         <div class="glass-card p-4">
-                            <p class="text-xs text-slate-400">Productos Registrados</p>
-                            <h3 class="text-2xl font-bold text-brand-400 mt-1" id="dash-prod-count">0</h3>
-                        </div>
-                        <div class="glass-card p-4">
-                            <p class="text-xs text-slate-400">Estado del Sistema</p>
-                            <h3 class="text-sm font-bold text-emerald-400 mt-2"><i class="fa-solid fa-circle-check mr-1"></i> Conectado a Supabase</h3>
+                            <p class="text-xs text-slate-400">Productos en Base</p>
+                            <h3 class="text-2xl font-bold text-emerald-400 mt-1" id="dash-prod-count">0</h3>
                         </div>
                     </div>
                 </div>
 
-                <!-- 2. CLIENTES -->
+                <!-- 2. MÓDULO DE FORMULACIÓN DE PROFORMAS -->
+                <div id="view-proformas" class="view-section hidden space-y-6">
+                    <div class="glass-card p-6 space-y-6">
+                        <h3 class="text-lg font-bold text-white border-b border-slate-700 pb-3"><i class="fa-solid fa-file-signature text-brand-400 mr-2"></i> Formular Cotización / Proforma</h3>
+                        
+                        <!-- Datos del Cliente -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">Cliente / Empresa</label>
+                                <input type="text" id="prof-client-name" placeholder="Nombre del cliente o razón social" class="input-tech text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-slate-400 mb-1">RUC / DNI</label>
+                                <input type="text" id="prof-client-doc" placeholder="Número de Documento" class="input-tech text-sm">
+                            </div>
+                        </div>
+
+                        <!-- Formulario para agregar ítems -->
+                        <div class="bg-slate-900/50 p-4 rounded-lg border border-slate-700/50 space-y-3">
+                            <p class="text-xs font-semibold text-brand-400 uppercase">Añadir Ítem / Servicio</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
+                                <input type="text" id="item-desc" placeholder="Descripción del producto o servicio" class="input-tech text-sm sm:col-span-6">
+                                <input type="number" id="item-qty" placeholder="Cant." value="1" class="input-tech text-sm sm:col-span-2">
+                                <input type="number" step="0.01" id="item-price" placeholder="Precio Unit. (S/)" class="input-tech text-sm sm:col-span-2">
+                                <button onclick="addItemToProforma()" class="btn-tech text-xs sm:col-span-2"><i class="fa-solid fa-plus"></i> Agregar</button>
+                            </div>
+                        </div>
+
+                        <!-- Tabla de Ítems Agragados -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-800/50 text-slate-400 text-xs uppercase">
+                                        <th class="p-3">Cant.</th>
+                                        <th class="p-3">Descripción</th>
+                                        <th class="p-3">P. Unit.</th>
+                                        <th class="p-3">Subtotal</th>
+                                        <th class="p-3 text-center">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="proforma-items-tbody" class="text-sm divide-y divide-slate-700/50"></tbody>
+                            </table>
+                        </div>
+
+                        <!-- Totales y Generación -->
+                        <div class="flex flex-col sm:flex-row justify-between items-end border-t border-slate-700 pt-4 gap-4">
+                            <button onclick="generatePDF()" class="btn-tech bg-green-600 hover:bg-green-500 w-full sm:w-auto"><i class="fa-solid fa-file-pdf"></i> Guardar y Descargar PDF</button>
+                            <div class="text-right space-y-1 text-sm">
+                                <p class="text-slate-400">Subtotal: <span id="prof-subtotal" class="text-white font-medium">S/ 0.00</span></p>
+                                <p class="text-slate-400">IGV (18%): <span id="prof-igv" class="text-white font-medium">S/ 0.00</span></p>
+                                <p class="text-lg font-bold text-brand-400">Total: <span id="prof-total">S/ 0.00</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. CLIENTES -->
                 <div id="view-clientes" class="view-section hidden space-y-6">
                     <div class="flex justify-between items-center">
-                        <h3 class="text-lg font-semibold text-white">Gestión de Clientes</h3>
+                        <h3 class="text-lg font-semibold text-white">Directorio de Clientes</h3>
                         <button onclick="openModal('modal-cliente')" class="btn-tech"><i class="fa-solid fa-user-plus"></i> Nuevo Cliente</button>
                     </div>
                     <div class="glass-card overflow-hidden">
                         <table class="w-full text-left border-collapse">
                             <thead>
                                 <tr class="bg-slate-800/50 text-slate-400 text-xs uppercase">
-                                    <th class="p-4">Cliente / Empresa</th>
+                                    <th class="p-4">Cliente</th>
                                     <th class="p-4">Documento</th>
                                     <th class="p-4">Teléfono</th>
-                                    <th class="p-4">Dirección</th>
                                 </tr>
                             </thead>
                             <tbody id="clientes-tbody" class="text-sm divide-y divide-slate-700/50"></tbody>
@@ -184,7 +224,7 @@
                     </div>
                 </div>
 
-                <!-- 3. PRODUCTOS -->
+                <!-- 4. PRODUCTOS -->
                 <div id="view-productos" class="view-section hidden space-y-6">
                     <div class="flex justify-between items-center">
                         <h3 class="text-lg font-semibold text-white">Inventario de Productos</h3>
@@ -195,8 +235,6 @@
                             <thead>
                                 <tr class="bg-slate-800/50 text-slate-400 text-xs uppercase">
                                     <th class="p-4">Producto</th>
-                                    <th class="p-4">Categoría</th>
-                                    <th class="p-4">Precio Compra</th>
                                     <th class="p-4">Precio Venta</th>
                                 </tr>
                             </thead>
@@ -209,67 +247,48 @@
         </main>
     </div>
 
-    <!-- MODAL CLIENTE -->
+    <!-- MODALES -->
     <div id="modal-cliente" class="fixed inset-0 z-50 flex items-center justify-center p-4 glass hidden">
-        <div class="glass-card w-full max-w-md p-6">
-            <h3 class="text-lg font-bold text-white mb-4">Registrar Nuevo Cliente</h3>
-            <form onsubmit="saveCliente(event)" class="space-y-3">
-                <input type="text" id="cli-name" placeholder="Nombre completo o Empresa" class="input-tech text-sm" required>
-                <div class="flex gap-2">
-                    <select id="cli-doctype" class="input-tech text-sm w-1/3">
-                        <option value="RUC">RUC</option>
-                        <option value="DNI">DNI</option>
-                    </select>
-                    <input type="text" id="cli-docnum" placeholder="Número de Documento" class="input-tech text-sm w-2/3" required>
-                </div>
-                <input type="text" id="cli-phone" placeholder="Teléfono" class="input-tech text-sm">
-                <input type="text" id="cli-address" placeholder="Dirección" class="input-tech text-sm">
-                <div class="flex justify-end gap-2 pt-3">
-                    <button type="button" onclick="closeModal('modal-cliente')" class="btn-tech-outline text-xs">Cancelar</button>
-                    <button type="submit" class="btn-tech text-xs">Guardar Cliente</button>
-                </div>
-            </form>
+        <div class="glass-card w-full max-w-md p-6 space-y-3">
+            <h3 class="text-lg font-bold text-white">Nuevo Cliente</h3>
+            <input type="text" id="cli-name" placeholder="Nombre completo o Razón Social" class="input-tech text-sm">
+            <input type="text" id="cli-docnum" placeholder="DNI o RUC" class="input-tech text-sm">
+            <input type="text" id="cli-phone" placeholder="Teléfono" class="input-tech text-sm">
+            <div class="flex justify-end gap-2 pt-2">
+                <button type="button" onclick="closeModal('modal-cliente')" class="btn-tech-outline text-xs">Cancelar</button>
+                <button onclick="saveCliente()" class="btn-tech text-xs">Guardar</button>
+            </div>
         </div>
     </div>
 
-    <!-- MODAL PRODUCTO -->
     <div id="modal-producto" class="fixed inset-0 z-50 flex items-center justify-center p-4 glass hidden">
-        <div class="glass-card w-full max-w-md p-6">
-            <h3 class="text-lg font-bold text-white mb-4">Añadir Producto</h3>
-            <form onsubmit="saveProducto(event)" class="space-y-3">
-                <input type="text" id="prod-name" placeholder="Nombre del Producto" class="input-tech text-sm" required>
-                <input type="text" id="prod-category" placeholder="Categoría (CCTV, Redes, etc.)" class="input-tech text-sm">
-                <div class="flex gap-2">
-                    <input type="number" step="0.01" id="prod-cost" placeholder="Costo Compra" class="input-tech text-sm w-1/2" required>
-                    <input type="number" step="0.01" id="prod-price" placeholder="Precio Venta" class="input-tech text-sm w-1/2" required>
-                </div>
-                <div class="flex justify-end gap-2 pt-3">
-                    <button type="button" onclick="closeModal('modal-producto')" class="btn-tech-outline text-xs">Cancelar</button>
-                    <button type="submit" class="btn-tech text-xs">Guardar Producto</button>
-                </div>
-            </form>
+        <div class="glass-card w-full max-w-md p-6 space-y-3">
+            <h3 class="text-lg font-bold text-white">Añadir Producto</h3>
+            <input type="text" id="prod-name" placeholder="Nombre del Producto" class="input-tech text-sm">
+            <input type="number" step="0.01" id="prod-price" placeholder="Precio de Venta (S/)" class="input-tech text-sm">
+            <div class="flex justify-end gap-2 pt-2">
+                <button type="button" onclick="closeModal('modal-producto')" class="btn-tech-outline text-xs">Cancelar</button>
+                <button onclick="saveProducto()" class="btn-tech text-xs">Guardar</button>
+            </div>
         </div>
     </div>
 
-    <!-- SCRIPT JS PRINCIPAL -->
+    <!-- SCRIPT JS -->
     <script>
         const SUPABASE_URL = 'https://nozaqrgryxvdomtiwgsd.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_zeR7uHTUPHFThzWlb3CtFg_LGpGkT-Z';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
         let currentUser = null;
+        let proformaItems = [];
 
         function switchAuthTab(tab) {
             if (tab === 'login') {
                 document.getElementById('form-login').classList.remove('hidden');
                 document.getElementById('form-register').classList.add('hidden');
-                document.getElementById('tab-login').className = 'w-1/2 py-2 text-center text-brand-400 border-b-2 border-brand-400';
-                document.getElementById('tab-register').className = 'w-1/2 py-2 text-center text-slate-400 hover:text-white';
             } else {
                 document.getElementById('form-login').classList.add('hidden');
                 document.getElementById('form-register').classList.remove('hidden');
-                document.getElementById('tab-register').className = 'w-1/2 py-2 text-center text-brand-400 border-b-2 border-brand-400';
-                document.getElementById('tab-login').className = 'w-1/2 py-2 text-center text-slate-400 hover:text-white';
             }
         }
 
@@ -279,18 +298,18 @@
                 const email = document.getElementById('auth-email').value;
                 const password = document.getElementById('auth-pwd').value;
                 const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-                if (error) { alert('Error: ' + error.message); } 
-                else { initSession(data.user); }
+                if (error) alert('Error: ' + error.message);
+                else initSession(data.user);
             } else {
                 const email = document.getElementById('reg-email').value;
                 const password = document.getElementById('reg-pwd').value;
                 const { data, error } = await supabaseClient.auth.signUp({ email, password });
-                if (error) { alert('Error: ' + error.message); } 
-                else { alert('Registro guardado. Revisa tu correo o inicia sesión.'); switchAuthTab('login'); }
+                if (error) alert('Error: ' + error.message);
+                else { alert('Registro completado.'); switchAuthTab('login'); }
             }
         }
 
-        async function initSession(user) {
+        function initSession(user) {
             currentUser = user;
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app-container').classList.remove('hidden');
@@ -313,11 +332,95 @@
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             if(element) element.classList.add('active');
             
-            const titles = { dashboard: 'Dashboard', clientes: 'Clientes', productos: 'Inventario' };
+            const titles = { dashboard: 'Dashboard', proformas: 'Formulación de Proformas', clientes: 'Clientes', productos: 'Inventario' };
             document.getElementById('view-title').innerText = titles[viewId] || 'TecnoDoc Pro';
         }
 
-        // CARGAR DATOS REALES DE SUPABASE
+        // LÓGICA DE PROFORMAS
+        function addItemToProforma() {
+            const desc = document.getElementById('item-desc').value;
+            const qty = parseInt(document.getElementById('item-qty').value) || 1;
+            const price = parseFloat(document.getElementById('item-price').value) || 0;
+
+            if(!desc || price <= 0) { alert('Ingresa una descripción y precio válido.'); return; }
+
+            const subtotal = qty * price;
+            proformaItems.push({ desc, qty, price, subtotal });
+            renderProformaItems();
+
+            document.getElementById('item-desc').value = '';
+            document.getElementById('item-price').value = '';
+        }
+
+        function renderProformaItems() {
+            const tbody = document.getElementById('proforma-items-tbody');
+            tbody.innerHTML = '';
+            let totalSub = 0;
+
+            proformaItems.forEach((item, index) => {
+                totalSub += item.subtotal;
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="p-3">${item.qty}</td>
+                        <td class="p-3">${item.desc}</td>
+                        <td class="p-3">S/ ${item.price.toFixed(2)}</td>
+                        <td class="p-3">S/ ${item.subtotal.toFixed(2)}</td>
+                        <td class="p-3 text-center"><button onclick="removeItem(${index})" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash"></i></button></td>
+                    </tr>
+                `;
+            });
+
+            const igv = totalSub * 0.18;
+            const total = totalSub + igv;
+
+            document.getElementById('prof-subtotal').innerText = `S/ ${totalSub.toFixed(2)}`;
+            document.getElementById('prof-igv').innerText = `S/ ${igv.toFixed(2)}`;
+            document.getElementById('prof-total').innerText = `S/ ${total.toFixed(2)}`;
+        }
+
+        function removeItem(index) {
+            proformaItems.splice(index, 1);
+            renderProformaItems();
+        }
+
+        // GENERACIÓN DE PDF DE LA PROFORMA
+        function generatePDF() {
+            const clientName = document.getElementById('prof-client-name').value || 'Cliente General';
+            if(proformaItems.length === 0) { alert('Añade al menos un producto o servicio a la cotización.'); return; }
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFontSize(18);
+            doc.text("COTIZACIÓN / PROFORMA", 14, 20);
+            doc.setFontSize(10);
+            doc.text(`Cliente: ${clientName}`, 14, 30);
+            doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 14, 36);
+
+            let y = 50;
+            doc.text("Cant.", 14, y);
+            doc.text("Descripción", 35, y);
+            doc.text("P. Unit.", 140, y);
+            doc.text("Subtotal", 170, y);
+            doc.line(14, y + 2, 195, y + 2);
+
+            y += 10;
+            proformaItems.forEach(item => {
+                doc.text(item.qty.toString(), 14, y);
+                doc.text(item.desc, 35, y);
+                doc.text(`S/ ${item.price.toFixed(2)}`, 140, y);
+                doc.text(`S/ ${item.subtotal.toFixed(2)}`, 170, y);
+                y += 8;
+            });
+
+            doc.line(14, y, 195, y);
+            y += 10;
+            doc.text(`TOTAL: ${document.getElementById('prof-total').innerText}`, 140, y);
+
+            doc.save(`Proforma_${clientName.replace(/ /g, "_")}.pdf`);
+        }
+
+        // BASE DE DATOS SUPABASE
         async function loadDashboardData() {
             const { count: cliCount } = await supabaseClient.from('clients').select('*', { count: 'exact', head: true });
             const { count: prodCount } = await supabaseClient.from('products').select('*', { count: 'exact', head: true });
@@ -326,272 +429,48 @@
         }
 
         async function loadClientes() {
-            const { data: clientes } = await supabaseClient.from('clients').select('*').order('created_at', { ascending: false });
+            const { data: clientes } = await supabaseClient.from('clients').select('*');
             const tbody = document.getElementById('clientes-tbody');
             tbody.innerHTML = '';
-            if(clientes && clientes.length > 0) {
-                clientes.forEach(c => {
-                    tbody.innerHTML += `<tr class="hover:bg-slate-800/30"><td class="p-4 font-medium text-white">${c.name}</td><td class="p-4">${c.doc_type}: ${c.doc_number}</td><td class="p-4">${c.phone || '-'}</td><td class="p-4">${c.address || '-'}</td></tr>`;
-                });
-            } else { tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500">No hay clientes guardados.</td></tr>`; }
+            if(clientes) clientes.forEach(c => tbody.innerHTML += `<tr><td class="p-4">${c.name}</td><td class="p-4">${c.doc_number}</td><td class="p-4">${c.phone || '-'}</td></tr>`);
         }
 
-        async function saveCliente(e) {
-            e.preventDefault();
+        async function saveCliente() {
             const clientData = {
                 user_id: currentUser.id,
                 name: document.getElementById('cli-name').value,
-                doc_type: document.getElementById('cli-doctype').value,
+                doc_type: 'RUC',
                 doc_number: document.getElementById('cli-docnum').value,
-                phone: document.getElementById('cli-phone').value,
-                address: document.getElementById('cli-address').value
+                phone: document.getElementById('cli-phone').value
             };
-            const { error } = await supabaseClient.from('clients').insert([clientData]);
-            if(error) alert(error.message);
-            else { closeModal('modal-cliente'); loadClientes(); loadDashboardData(); }
+            await supabaseClient.from('clients').insert([clientData]);
+            closeModal('modal-cliente');
+            loadClientes();
+            loadDashboardData();
         }
 
         async function loadProductos() {
-            const { data: productos } = await supabaseClient.from('products').select('*').order('created_at', { ascending: false });
+            const { data: productos } = await supabaseClient.from('products').select('*');
             const tbody = document.getElementById('productos-tbody');
             tbody.innerHTML = '';
-            if(productos && productos.length > 0) {
-                productos.forEach(p => {
-                    tbody.innerHTML += `<tr class="hover:bg-slate-800/30"><td class="p-4 font-medium text-white">${p.name}</td><td class="p-4">${p.category || 'General'}</td><td class="p-4">S/ ${p.cost_price}</td><td class="p-4 font-semibold text-brand-400">S/ ${p.sale_price}</td></tr>`;
-                });
-            } else { tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-500">No hay productos en inventario.</td></tr>`; }
+            if(productos) productos.forEach(p => tbody.innerHTML += `<tr><td class="p-4">${p.name}</td><td class="p-4">S/ ${p.sale_price}</td></tr>`);
         }
 
-        async function saveProducto(e) {
-            e.preventDefault();
+        async function saveProducto() {
             const productData = {
                 user_id: currentUser.id,
                 name: document.getElementById('prod-name').value,
-                category: document.getElementById('prod-category').value,
-                cost_price: parseFloat(document.getElementById('prod-cost').value),
+                cost_price: 0,
                 sale_price: parseFloat(document.getElementById('prod-price').value)
             };
-            const { error } = await supabaseClient.from('products').insert([productData]);
-            if(error) alert(error.message);
-            else { closeModal('modal-producto'), loadProductos(); loadDashboardData(); }
+            await supabaseClient.from('products').insert([productData]);
+            closeModal('modal-producto');
+            loadProductos();
+            loadDashboardData();
         }
 
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-   <script>
-    // Conexión real a tu base de datos de Supabase
-    const SUPABASE_URL = 'https://nozaqrgryxvdomtiwgsd.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_zeR7uHTUPHFThzWlb3CtFg_LGpGkT-Z';
-
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    // Cambiar entre la pestaña de Login y Registro
-    function switchAuthTab(tab) {
-        if (tab === 'login') {
-            document.getElementById('form-login').classList.remove('hidden');
-            document.getElementById('form-register').classList.add('hidden');
-            document.getElementById('tab-login').className = 'w-1/2 py-2 text-center text-brand-400 border-b-2 border-brand-400';
-            document.getElementById('tab-register').className = 'w-1/2 py-2 text-center text-slate-400 hover:text-white';
-        } else {
-            document.getElementById('form-login').classList.add('hidden');
-            document.getElementById('form-register').classList.remove('hidden');
-            document.getElementById('tab-register').className = 'w-1/2 py-2 text-center text-brand-400 border-b-2 border-brand-400';
-            document.getElementById('tab-login').className = 'w-1/2 py-2 text-center text-slate-400 hover:text-white';
-        }
-    }
-
-    // Acción para los botones de Entrar y Registrarse
-    async function handleAuth(e, type) {
-        e.preventDefault();
-
-        if (type === 'login') {
-            const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-pwd').value;
-
-            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
-            if (error) {
-                alert('Error al ingresar: ' + error.message);
-            } else {
-                alert('¡Bienvenido!');
-                entrarAlSistema(data.user);
-            }
-        } else {
-            const email = document.getElementById('reg-email').value;
-            const password = document.getElementById('reg-pwd').value;
-            const name = document.getElementById('reg-name').value;
-            const company = document.getElementById('reg-company').value;
-
-            const { data, error } = await supabaseClient.auth.signUp({
-                email,
-                password,
-                options: {
-                    data: { full_name: name, company_name: company }
-                }
-            });
-
-            if (error) {
-                alert('Error al registrarte: ' + error.message);
-            } else {
-                alert('¡Registro enviado! Revisa tu correo Gmail para confirmar tu cuenta.');
-                switchAuthTab('login');
-            }
-        }
-    }
-
-    function entrarAlSistema(user) {
-        document.getElementById('login-screen').classList.add('hidden');
-        document.getElementById('app-container').classList.remove('hidden');
-        document.getElementById('user-display-name').innerText = user.email;
-    }
-
-    function logout() {
-        supabaseClient.auth.signOut();
-        window.location.reload();
-    }
-<script>
-    // Conexión real a tu base de datos de Supabase
-    const SUPABASE_URL = 'https://nozaqrgryxvdomtiwgsd.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_zeR7uHTUPHFThzWlb3CtFg_LGpGkT-Z';
-
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    // Cambiar entre la pestaña de Login y Registro
-    function switchAuthTab(tab) {
-        if (tab === 'login') {
-            document.getElementById('form-login').classList.remove('hidden');
-            document.getElementById('form-register').classList.add('hidden');
-            document.getElementById('tab-login').className = 'w-1/2 py-2 text-center text-brand-400 border-b-2 border-brand-400';
-            document.getElementById('tab-register').className = 'w-1/2 py-2 text-center text-slate-400 hover:text-white';
-        } else {
-            document.getElementById('form-login').classList.add('hidden');
-            document.getElementById('form-register').classList.remove('hidden');
-            document.getElementById('tab-register').className = 'w-1/2 py-2 text-center text-brand-400 border-b-2 border-brand-400';
-            document.getElementById('tab-login').className = 'w-1/2 py-2 text-center text-slate-400 hover:text-white';
-        }
-    }
-
-    // Acción para los botones de Entrar y Registrarse
-    async function handleAuth(e, type) {
-        e.preventDefault();
-
-        if (type === 'login') {
-            const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-pwd').value;
-
-            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
-            if (error) {
-                alert('Error al ingresar: ' + error.message);
-            } else {
-                alert('¡Bienvenido!');
-                entrarAlSistema(data.user);
-            }
-        } else {
-            const email = document.getElementById('reg-email').value;
-            const password = document.getElementById('reg-pwd').value;
-            const name = document.getElementById('reg-name').value;
-            const company = document.getElementById('reg-company').value;
-
-            const { data, error } = await supabaseClient.auth.signUp({
-                email,
-                password,
-                options: {
-                    data: { full_name: name, company_name: company }
-                }
-            });
-
-            if (error) {
-                alert('Error al registrarte: ' + error.message);
-            } else {
-                alert('¡Registro enviado! Revisa tu correo Gmail para confirmar tu cuenta.');
-                switchAuthTab('login');
-            }
-        }
-    }
-
-    function entrarAlSistema(user) {
-        document.getElementById('login-screen').classList.add('hidden');
-        document.getElementById('app-container').classList.remove('hidden');
-        document.getElementById('user-display-name').innerText = user.email;
-    }
-
-    function logout() {
-        supabaseClient.auth.signOut();
-        window.location.reload();
-    }
-</script>
-    <script>
-    // Conexión real a tu base de datos de Supabase
-    const SUPABASE_URL = 'https://nozaqrgryxvdomtiwgsd.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_zeR7uHTUPHFThzWlb3CtFg_LGpGkT-Z';
-
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    // Cambiar entre la pestaña de Login y Registro
-    function switchAuthTab(tab) {
-        if (tab === 'login') {
-            document.getElementById('form-login').classList.remove('hidden');
-            document.getElementById('form-register').classList.add('hidden');
-            document.getElementById('tab-login').className = 'w-1/2 py-2 text-center text-brand-400 border-b-2 border-brand-400';
-            document.getElementById('tab-register').className = 'w-1/2 py-2 text-center text-slate-400 hover:text-white';
-        } else {
-            document.getElementById('form-login').classList.add('hidden');
-            document.getElementById('form-register').classList.remove('hidden');
-            document.getElementById('tab-register').className = 'w-1/2 py-2 text-center text-brand-400 border-b-2 border-brand-400';
-            document.getElementById('tab-login').className = 'w-1/2 py-2 text-center text-slate-400 hover:text-white';
-        }
-    }
-
-    // Acción para los botones de Entrar y Registrarse
-    async function handleAuth(e, type) {
-        e.preventDefault();
-
-        if (type === 'login') {
-            const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-pwd').value;
-
-            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
-            if (error) {
-                alert('Error al ingresar: ' + error.message);
-            } else {
-                alert('¡Bienvenido!');
-                entrarAlSistema(data.user);
-            }
-        } else {
-            const email = document.getElementById('reg-email').value;
-            const password = document.getElementById('reg-pwd').value;
-            const name = document.getElementById('reg-name').value;
-            const company = document.getElementById('reg-company').value;
-
-            const { data, error } = await supabaseClient.auth.signUp({
-                email,
-                password,
-                options: {
-                    data: { full_name: name, company_name: company }
-                }
-            });
-
-            if (error) {
-                alert('Error al registrarte: ' + error.message);
-            } else {
-                alert('¡Registro enviado! Revisa tu correo Gmail para confirmar tu cuenta.');
-                switchAuthTab('login');
-            }
-        }
-    }
-
-    function entrarAlSistema(user) {
-        document.getElementById('login-screen').classList.add('hidden');
-        document.getElementById('app-container').classList.remove('hidden');
-        document.getElementById('user-display-name').innerText = user.email;
-    }
-
-    function logout() {
-        supabaseClient.auth.signOut();
-        window.location.reload();
-    }
-</script>
+    </script>
 </body>
 </html>
