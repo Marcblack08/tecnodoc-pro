@@ -567,6 +567,77 @@
 
         // Inicializar verificación de sesión
         checkSession();
-    </script>
+    <script>
+    // Conexión real a tu base de datos de Supabase
+    const SUPABASE_URL = 'https://nozaqrgryxvdomtiwgsd.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_zeR7uHTUPHFThzWlb3CtFg_LGpGkT-Z';
+
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // Cambiar entre la pestaña de Login y Registro
+    function switchAuthTab(tab) {
+        if (tab === 'login') {
+            document.getElementById('form-login').classList.remove('hidden');
+            document.getElementById('form-register').classList.add('hidden');
+            document.getElementById('tab-login').className = 'w-1/2 py-2 text-center text-brand-400 border-b-2 border-brand-400';
+            document.getElementById('tab-register').className = 'w-1/2 py-2 text-center text-slate-400 hover:text-white';
+        } else {
+            document.getElementById('form-login').classList.add('hidden');
+            document.getElementById('form-register').classList.remove('hidden');
+            document.getElementById('tab-register').className = 'w-1/2 py-2 text-center text-brand-400 border-b-2 border-brand-400';
+            document.getElementById('tab-login').className = 'w-1/2 py-2 text-center text-slate-400 hover:text-white';
+        }
+    }
+
+    // Acción para los botones de Entrar y Registrarse
+    async function handleAuth(e, type) {
+        e.preventDefault();
+
+        if (type === 'login') {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-pwd').value;
+
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+            if (error) {
+                alert('Error al ingresar: ' + error.message);
+            } else {
+                alert('¡Bienvenido!');
+                entrarAlSistema(data.user);
+            }
+        } else {
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-pwd').value;
+            const name = document.getElementById('reg-name').value;
+            const company = document.getElementById('reg-company').value;
+
+            const { data, error } = await supabaseClient.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: { full_name: name, company_name: company }
+                }
+            });
+
+            if (error) {
+                alert('Error al registrarte: ' + error.message);
+            } else {
+                alert('¡Registro enviado! Revisa tu correo Gmail para confirmar tu cuenta.');
+                switchAuthTab('login');
+            }
+        }
+    }
+
+    function entrarAlSistema(user) {
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('app-container').classList.remove('hidden');
+        document.getElementById('user-display-name').innerText = user.email;
+    }
+
+    function logout() {
+        supabaseClient.auth.signOut();
+        window.location.reload();
+    }
+</script>
 </body>
 </html>
