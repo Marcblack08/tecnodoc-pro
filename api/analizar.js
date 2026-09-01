@@ -1,11 +1,9 @@
-module.exports = async function (req, res) {
+export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Método no permitido' });
     }
 
     const { base64Data, mimeType, prompt, textOnly } = req.body;
-    
-    // Vercel lee la clave de sus variables ocultas
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
     if (!GEMINI_API_KEY) {
@@ -32,4 +30,4 @@ module.exports = async function (req, res) {
     } catch (error) {
         return res.status(500).json({ error: 'Error interno en la IA: ' + error.message });
     }
-};
+}
