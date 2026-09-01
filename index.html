@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TecnoDoc Pro 2.0 - Cotiza. Documenta. Analiza. Crece.</title>
+    <title>TecnoDoc Pro 2.0 - Cotiza. Documenta. Analiza.</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- jsPDF para Generación de PDF -->
+    <!-- jsPDF para exportar PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
     <script>
@@ -83,10 +83,10 @@
         </div>
     </div>
 
-    <!-- APLICACIÓN PRINCIPAL -->
+    <!-- APLICACIÓN PRINCIPAL (HERRAMIENTAS COMPLETAS) -->
     <div id="app-container" class="hidden flex h-screen w-full overflow-hidden">
         
-        <!-- SIDEBAR -->
+        <!-- SIDEBAR DE HERRAMIENTAS -->
         <aside class="w-64 glass border-r border-slate-700/50 flex flex-col h-full flex-shrink-0">
             <div class="p-6 flex items-center gap-3 border-b border-slate-700/50">
                 <i class="fa-solid fa-microchip text-2xl text-brand-400"></i>
@@ -94,12 +94,12 @@
             </div>
             
             <div class="p-4 flex-1 overflow-y-auto space-y-1">
-                <p class="text-xs font-semibold text-slate-500 uppercase mb-2 px-3">Menú Principal</p>
+                <p class="text-xs font-semibold text-slate-500 uppercase mb-2 px-3">Módulos</p>
                 <button onclick="nav('dashboard', this)" class="nav-item active w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/50">
                     <i class="fa-solid fa-house w-5 text-center"></i> Dashboard
                 </button>
                 <button onclick="nav('proformas', this)" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/50">
-                    <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i> Nueva Proforma
+                    <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i> Formular Proforma
                 </button>
                 <button onclick="nav('clientes', this)" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-300 hover:bg-slate-800/50">
                     <i class="fa-solid fa-users w-5 text-center"></i> Clientes
@@ -127,10 +127,10 @@
                 </div>
             </header>
 
-            <!-- VISTAS -->
+            <!-- CONTENIDO DE VISTAS -->
             <div class="flex-1 overflow-y-auto p-6">
                 
-                <!-- 1. DASHBOARD -->
+                <!-- DASHBOARD -->
                 <div id="view-dashboard" class="view-section space-y-6">
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div class="glass-card p-4">
@@ -138,26 +138,25 @@
                             <h3 class="text-2xl font-bold text-brand-400 mt-1" id="dash-prof-count">0</h3>
                         </div>
                         <div class="glass-card p-4">
-                            <p class="text-xs text-slate-400">Total Clientes</p>
+                            <p class="text-xs text-slate-400">Clientes en Base</p>
                             <h3 class="text-2xl font-bold text-white mt-1" id="dash-cli-count">0</h3>
                         </div>
                         <div class="glass-card p-4">
-                            <p class="text-xs text-slate-400">Productos en Base</p>
+                            <p class="text-xs text-slate-400">Productos Registrados</p>
                             <h3 class="text-2xl font-bold text-emerald-400 mt-1" id="dash-prod-count">0</h3>
                         </div>
                     </div>
                 </div>
 
-                <!-- 2. MÓDULO DE FORMULACIÓN DE PROFORMAS -->
+                <!-- FORMULACIÓN DE PROFORMAS -->
                 <div id="view-proformas" class="view-section hidden space-y-6">
                     <div class="glass-card p-6 space-y-6">
-                        <h3 class="text-lg font-bold text-white border-b border-slate-700 pb-3"><i class="fa-solid fa-file-signature text-brand-400 mr-2"></i> Formular Cotización / Proforma</h3>
+                        <h3 class="text-lg font-bold text-white border-b border-slate-700 pb-3"><i class="fa-solid fa-file-signature text-brand-400 mr-2"></i> Generador de Cotizaciones</h3>
                         
-                        <!-- Datos del Cliente -->
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs text-slate-400 mb-1">Cliente / Empresa</label>
-                                <input type="text" id="prof-client-name" placeholder="Nombre del cliente o razón social" class="input-tech text-sm">
+                                <input type="text" id="prof-client-name" placeholder="Nombre o Razón Social" class="input-tech text-sm">
                             </div>
                             <div>
                                 <label class="block text-xs text-slate-400 mb-1">RUC / DNI</label>
@@ -165,18 +164,16 @@
                             </div>
                         </div>
 
-                        <!-- Formulario para agregar ítems -->
                         <div class="bg-slate-900/50 p-4 rounded-lg border border-slate-700/50 space-y-3">
-                            <p class="text-xs font-semibold text-brand-400 uppercase">Añadir Ítem / Servicio</p>
+                            <p class="text-xs font-semibold text-brand-400 uppercase">Añadir Ítem o Servicio</p>
                             <div class="grid grid-cols-1 sm:grid-cols-12 gap-3">
-                                <input type="text" id="item-desc" placeholder="Descripción del producto o servicio" class="input-tech text-sm sm:col-span-6">
+                                <input type="text" id="item-desc" placeholder="Descripción del producto o trabajo" class="input-tech text-sm sm:col-span-6">
                                 <input type="number" id="item-qty" placeholder="Cant." value="1" class="input-tech text-sm sm:col-span-2">
-                                <input type="number" step="0.01" id="item-price" placeholder="Precio Unit. (S/)" class="input-tech text-sm sm:col-span-2">
+                                <input type="number" step="0.01" id="item-price" placeholder="Precio (S/)" class="input-tech text-sm sm:col-span-2">
                                 <button onclick="addItemToProforma()" class="btn-tech text-xs sm:col-span-2"><i class="fa-solid fa-plus"></i> Agregar</button>
                             </div>
                         </div>
 
-                        <!-- Tabla de Ítems Agragados -->
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse">
                                 <thead>
@@ -192,9 +189,8 @@
                             </table>
                         </div>
 
-                        <!-- Totales y Generación -->
                         <div class="flex flex-col sm:flex-row justify-between items-end border-t border-slate-700 pt-4 gap-4">
-                            <button onclick="generatePDF()" class="btn-tech bg-green-600 hover:bg-green-500 w-full sm:w-auto"><i class="fa-solid fa-file-pdf"></i> Guardar y Descargar PDF</button>
+                            <button onclick="generatePDF()" class="btn-tech bg-green-600 hover:bg-green-500 w-full sm:w-auto"><i class="fa-solid fa-file-pdf"></i> Generar y Descargar PDF</button>
                             <div class="text-right space-y-1 text-sm">
                                 <p class="text-slate-400">Subtotal: <span id="prof-subtotal" class="text-white font-medium">S/ 0.00</span></p>
                                 <p class="text-slate-400">IGV (18%): <span id="prof-igv" class="text-white font-medium">S/ 0.00</span></p>
@@ -204,7 +200,7 @@
                     </div>
                 </div>
 
-                <!-- 3. CLIENTES -->
+                <!-- CLIENTES -->
                 <div id="view-clientes" class="view-section hidden space-y-6">
                     <div class="flex justify-between items-center">
                         <h3 class="text-lg font-semibold text-white">Directorio de Clientes</h3>
@@ -224,10 +220,10 @@
                     </div>
                 </div>
 
-                <!-- 4. PRODUCTOS -->
+                <!-- PRODUCTOS -->
                 <div id="view-productos" class="view-section hidden space-y-6">
                     <div class="flex justify-between items-center">
-                        <h3 class="text-lg font-semibold text-white">Inventario de Productos</h3>
+                        <h3 class="text-lg font-semibold text-white">Base de Productos</h3>
                         <button onclick="openModal('modal-producto')" class="btn-tech"><i class="fa-solid fa-plus"></i> Añadir Producto</button>
                     </div>
                     <div class="glass-card overflow-hidden">
@@ -251,7 +247,7 @@
     <div id="modal-cliente" class="fixed inset-0 z-50 flex items-center justify-center p-4 glass hidden">
         <div class="glass-card w-full max-w-md p-6 space-y-3">
             <h3 class="text-lg font-bold text-white">Nuevo Cliente</h3>
-            <input type="text" id="cli-name" placeholder="Nombre completo o Razón Social" class="input-tech text-sm">
+            <input type="text" id="cli-name" placeholder="Nombre completo o Empresa" class="input-tech text-sm">
             <input type="text" id="cli-docnum" placeholder="DNI o RUC" class="input-tech text-sm">
             <input type="text" id="cli-phone" placeholder="Teléfono" class="input-tech text-sm">
             <div class="flex justify-end gap-2 pt-2">
@@ -273,7 +269,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT JS -->
+    <!-- LÓGICA DE CONEXIÓN -->
     <script>
         const SUPABASE_URL = 'https://nozaqrgryxvdomtiwgsd.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_zeR7uHTUPHFThzWlb3CtFg_LGpGkT-Z';
@@ -305,7 +301,7 @@
                 const password = document.getElementById('reg-pwd').value;
                 const { data, error } = await supabaseClient.auth.signUp({ email, password });
                 if (error) alert('Error: ' + error.message);
-                else { alert('Registro completado.'); switchAuthTab('login'); }
+                else { alert('Registro guardado exitosamente.'); switchAuthTab('login'); }
             }
         }
 
@@ -336,13 +332,13 @@
             document.getElementById('view-title').innerText = titles[viewId] || 'TecnoDoc Pro';
         }
 
-        // LÓGICA DE PROFORMAS
+        // LÓGICA DE COTIZACIONES
         function addItemToProforma() {
             const desc = document.getElementById('item-desc').value;
             const qty = parseInt(document.getElementById('item-qty').value) || 1;
             const price = parseFloat(document.getElementById('item-price').value) || 0;
 
-            if(!desc || price <= 0) { alert('Ingresa una descripción y precio válido.'); return; }
+            if(!desc || price <= 0) { alert('Completa la descripción y precio.'); return; }
 
             const subtotal = qty * price;
             proformaItems.push({ desc, qty, price, subtotal });
@@ -383,10 +379,9 @@
             renderProformaItems();
         }
 
-        // GENERACIÓN DE PDF DE LA PROFORMA
         function generatePDF() {
             const clientName = document.getElementById('prof-client-name').value || 'Cliente General';
-            if(proformaItems.length === 0) { alert('Añade al menos un producto o servicio a la cotización.'); return; }
+            if(proformaItems.length === 0) { alert('Añade al menos un producto a la proforma.'); return; }
 
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
@@ -420,7 +415,7 @@
             doc.save(`Proforma_${clientName.replace(/ /g, "_")}.pdf`);
         }
 
-        // BASE DE DATOS SUPABASE
+        // SUPABASE DATABASE
         async function loadDashboardData() {
             const { count: cliCount } = await supabaseClient.from('clients').select('*', { count: 'exact', head: true });
             const { count: prodCount } = await supabaseClient.from('products').select('*', { count: 'exact', head: true });
@@ -468,7 +463,6 @@
             loadProductos();
             loadDashboardData();
         }
-
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
     </script>
